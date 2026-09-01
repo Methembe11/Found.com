@@ -286,12 +286,6 @@ const ImagePreview = styled.div`
   }
 `;
 
-const ImagePlaceholder = styled.span`
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 24px;
-  color: #e2e0d8;
-`;
-
 const FileInput = styled.input`
   width: 100%;
   height: 48px;

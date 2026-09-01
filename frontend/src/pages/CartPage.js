@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useCart } from '../context/CartContext';
+import { resolveImageUrl } from '../context/api';
 
 const PageWrap = styled.div`
   max-width: 1200px;
@@ -287,7 +288,7 @@ const CartPage = () => {
             <CartItem key={`${item.id}-${item.size}`}>
               <ItemImg>
                 {item.image_url ? (
-                  <img src={item.image_url} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={resolveImageUrl(item.image_url)} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
                   <ItemPlaceholder>F</ItemPlaceholder>
                 )}

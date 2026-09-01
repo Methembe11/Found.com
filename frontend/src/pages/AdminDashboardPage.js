@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import {
   fetchAdminStats, fetchAdminProducts, fetchAdminOrders,
   fetchAdminCustomers, fetchAdminSearchLogs, createAdminProduct,
-  updateAdminProduct, deleteAdminProduct
+  updateAdminProduct, deleteAdminProduct, resolveImageUrl
 } from '../context/api';
 
 const Wrap = styled.div`
@@ -535,7 +535,7 @@ const AdminDashboardPage = () => {
                 <TableRow key={p.id} $cols="40px 50px 1.5fr 1fr 80px 60px 100px" $minWidth="650px">
                   <span>{i + 1}</span>
                   <ProductThumb>
-                    {p.image_url ? <img src={p.image_url} alt={p.name} /> : <ThumbPlaceholder>F</ThumbPlaceholder>}
+                    {p.image_url ? <img src={resolveImageUrl(p.image_url)} alt={p.name} /> : <ThumbPlaceholder>F</ThumbPlaceholder>}
                   </ProductThumb>
                   <span>{p.name}</span>
                   <span>{p.category} / {p.subcategory}</span>

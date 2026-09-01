@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { resolveImageUrl } from '../context/api';
 
 const Card = styled(Link)`
   position: relative;
@@ -88,7 +89,7 @@ const ProductCard = ({ product }) => {
         <ImgInner>
           {product.image_url ? (
             <img
-              src={product.image_url}
+              src={resolveImageUrl(product.image_url)}
               alt={product.name}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />

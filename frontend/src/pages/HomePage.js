@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import ProductCard from '../components/ProductCard';
-import { fetchProducts } from '../context/api';
+import { fetchProducts, resolveImageUrl } from '../context/api';
 
 const HeroGrid = styled.div`
   display: grid;
@@ -304,7 +304,7 @@ const HomePage = () => {
             try {
               const res = await fetchProducts({ category: cat.name, limit: 1 });
               if (res[0] && res[0].image_url) {
-                imgs[cat.name] = res[0].image_url;
+                imgs[cat.name] = resolveImageUrl(res[0].image_url);
               }
             } catch (e) { /* ignore */ }
           })

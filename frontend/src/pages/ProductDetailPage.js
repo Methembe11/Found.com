@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useCart } from '../context/CartContext';
-import { fetchProduct } from '../context/api';
+import { fetchProduct, resolveImageUrl } from '../context/api';
 
 const PageWrap = styled.div`
   max-width: 1200px;
@@ -180,11 +180,18 @@ const Description = styled.p`
 
 const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
+const SizeError = styled.p`
+  margin: 0.5rem 0 0;
+  color: #ef4444;
+  font-size: 12px;
+`;
+
 const ProductDetailPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [selectedSize, setSelectedSize] = useState('');
   const [added, setAdded] = useState(false);
+  const [sizeError, setSizeError] = useState('');
   const [loading, setLoading] = useState(true);
   const { addItem } = useCart();
 
@@ -203,8 +210,13 @@ const ProductDetailPage = () => {
   }, [id]);
 
   const handleAddToCart = () => {
-    if (!selectedSize || !product) return;
+    if (!selectedSize) {
+      setSizeError('Please select a size first.');
+      return;
+    }
+    if (!product) return;
     addItem(product, selectedSize);
+    setSizeError('');
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
@@ -241,7 +253,7 @@ const ProductDetailPage = () => {
       <Grid>
         <ImageCarousel>
           {product.image_url ? (
-            <img src={product.image_url} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src={resolveImageUrl(product.image_url)} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           ) : (
             <Placeholder>F</Placeholder>
           )}
@@ -258,11 +270,12 @@ const ProductDetailPage = () => {
           <SizeLabel>Select size</SizeLabel>
           <SizeGrid>
             {sizes.map(s => (
-              <SizeBtn key={s} $active={selectedSize === s} onClick={() => setSelectedSize(s)}>
+              <SizeBtn key={s} $active={selectedSize === s} onClick={() => { setSelectedSize(s); setSizeError(''); }}>
                 {s}
               </SizeBtn>
             ))}
           </SizeGrid>
+          {sizeError && <SizeError>{sizeError}</SizeError>}
 
           <AddToCartBtn onClick={handleAddToCart} $added={added}>
             {added ? (

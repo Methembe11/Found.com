@@ -196,12 +196,34 @@ const Spinner = styled.div`
   @keyframes spin { to { transform: rotate(360deg); } }
 `;
 
+const CardFields = styled.div`
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #e2e0d8;
+  background: #fafaf8;
+`;
+
+const CardRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+`;
+
+const MobileNotice = styled.p`
+  margin-top: 1rem;
+  font-size: 12px;
+  color: #9a9890;
+  padding: 0.75rem 1rem;
+  background: #f0efe9;
+  line-height: 1.5;
+`;
+
 const paymentMethods = [
-  { id: 'ecocash', name: 'EcoCash', desc: 'Prompt sent to your phone' },
-  { id: 'innbucks', name: 'Innbucks', desc: 'Prompt sent to your phone' },
-  { id: 'omari', name: 'Omari', desc: 'Prompt sent to your phone' },
-  { id: 'zimswitch', name: 'ZimSwitch', desc: 'Pay with your card' },
-  { id: 'visa', name: 'Visa / Mastercard', desc: 'International card' },
+  { id: 'ecocash', name: 'EcoCash', desc: 'Prompt sent to your phone', type: 'mobile' },
+  { id: 'innbucks', name: 'Innbucks', desc: 'Prompt sent to your phone', type: 'mobile' },
+  { id: 'omari', name: 'Omari', desc: 'Prompt sent to your phone', type: 'mobile' },
+  { id: 'zimswitch', name: 'ZimSwitch', desc: 'Pay with your card', type: 'card' },
+  { id: 'visa', name: 'Visa / Mastercard', desc: 'International card', type: 'card' },
 ];
 
 const CheckoutPage = () => {
@@ -211,20 +233,39 @@ const CheckoutPage = () => {
   const [form, setForm] = useState({
     name: '', phone: '', email: '',
     address: '', city: '', notes: '',
-    payment_method: 'ecocash'
+    payment_method: 'ecocash',
+    card_number: '', card_expiry: '', card_cvv: ''
   });
+
+  const selectedPayment = paymentMethods.find(pm => pm.id === form.payment_method);
+  const isCard = selectedPayment?.type === 'card';
+  const isMobile = selectedPayment?.type === 'mobile';
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const formatCardNumber = (e) => {
+    let value = e.target.value.replace(/\D/g, '').substring(0, 16);
+    value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+    setForm({ ...form, card_number: value });
+  };
+
+  const formatExpiry = (e) => {
+    let value = e.target.value.replace(/\D/g, '').substring(0, 4);
+    if (value.length > 2) value = value.substring(0, 2) + '/' + value.substring(2);
+    setForm({ ...form, card_expiry: value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.phone || !form.address || !form.city) return;
+    if (!form.name || !form.address || !form.city) return;
+    if (isMobile && !form.phone) return;
+    if (isCard && (!form.card_number || !form.card_expiry || !form.card_cvv)) return;
     setLoading(true);
 
     try {
-      const order = await createOrder({
+      const orderData = {
         guest: { name: form.name, phone: form.phone, email: form.email },
         address: `${form.address}, ${form.city}`,
         notes: form.notes,
@@ -236,7 +277,11 @@ const CheckoutPage = () => {
           unit_price: i.price
         })),
         total
-      });
+      };
+      if (isCard) {
+        orderData.card_last4 = form.card_number.replace(/\s/g, '').slice(-4);
+      }
+      const order = await createOrder(orderData);
       clearCart();
       navigate(`/order-confirmation/${order.id}`);
     } catch (err) {
@@ -258,10 +303,12 @@ const CheckoutPage = () => {
                 <Label $required>Full name *</Label>
                 <Input name="name" placeholder="Your full name" value={form.name} onChange={handleChange} required />
               </FormGroup>
-              <FormGroup>
-                <Label $required>Phone number *</Label>
-                <Input name="phone" placeholder="0771234567" value={form.phone} onChange={handleChange} required />
-              </FormGroup>
+              {isMobile && (
+                <FormGroup>
+                  <Label $required>Phone number *</Label>
+                  <Input name="phone" placeholder="0771234567" value={form.phone} onChange={handleChange} required />
+                </FormGroup>
+              )}
               <FormGroup>
                 <Label>Email (optional)</Label>
                 <Input name="email" type="email" placeholder="your@email.com" value={form.email} onChange={handleChange} />
@@ -303,6 +350,53 @@ const CheckoutPage = () => {
                   </PaymentOption>
                 ))}
               </PaymentOptions>
+
+              {isCard && (
+                <CardFields>
+                  <FormGroup>
+                    <Label $required>Card number *</Label>
+                    <Input
+                      name="card_number"
+                      placeholder="1234 5678 9012 3456"
+                      value={form.card_number}
+                      onChange={formatCardNumber}
+                      required
+                      maxLength="19"
+                    />
+                  </FormGroup>
+                  <CardRow>
+                    <FormGroup>
+                      <Label $required>Expiry *</Label>
+                      <Input
+                        name="card_expiry"
+                        placeholder="MM/YY"
+                        value={form.card_expiry}
+                        onChange={formatExpiry}
+                        required
+                        maxLength="5"
+                      />
+                    </FormGroup>
+                    <FormGroup>
+                      <Label $required>CVV *</Label>
+                      <Input
+                        name="card_cvv"
+                        placeholder="123"
+                        value={form.card_cvv}
+                        onChange={(e) => setForm({ ...form, card_cvv: e.target.value.replace(/\D/g, '').substring(0, 4) })}
+                        required
+                        maxLength="4"
+                        type="password"
+                      />
+                    </FormGroup>
+                  </CardRow>
+                </CardFields>
+              )}
+
+              {isMobile && (
+                <MobileNotice>
+                  A payment prompt will be sent to your phone. Complete the payment on your device.
+                </MobileNotice>
+              )}
             </FormSection>
           </div>
 

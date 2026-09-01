@@ -1,4 +1,13 @@
-const API = '/api';
+const API = process.env.REACT_APP_API_URL || '/api';
+
+export const resolveImageUrl = (url) => {
+  if (!url) return url;
+  if (url.startsWith('/uploads/')) {
+    const base = process.env.REACT_APP_API_URL || '';
+    return `${base}${url}`;
+  }
+  return url;
+};
 
 export const fetchProducts = async (params = {}) => {
   const query = new URLSearchParams(params).toString();

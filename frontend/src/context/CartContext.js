@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { resolveImageUrl } from './api';
 
 const CartContext = createContext();
 
@@ -31,7 +32,7 @@ export const CartProvider = ({ children }) => {
         qty: 1,
         size,
         category: product.category,
-        image_url: product.image_url
+        image_url: resolveImageUrl(product.image_url)
       }];
     });
   };

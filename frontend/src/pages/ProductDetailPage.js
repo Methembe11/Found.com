@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useCart } from '../context/CartContext';
-import { fetchProduct, resolveImageUrl } from '../context/api';
+import { fetchProduct } from '../context/api';
 
 const PageWrap = styled.div`
   max-width: 1200px;
@@ -253,7 +253,7 @@ const ProductDetailPage = () => {
       <Grid>
         <ImageCarousel>
           {product.image_url ? (
-            <img src={resolveImageUrl(product.image_url)} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src={product.image_url} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           ) : (
             <Placeholder>F</Placeholder>
           )}

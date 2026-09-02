@@ -1,0 +1,44 @@
+# INVOICE
+
+**Invoice Number:** INV-2026-001  
+**Date:** September 1, 2026  
+**Due Date:** October 1, 2026
+
+---
+
+## BILL TO
+
+**Found.com**  
+123 Innovation Drive  
+San Francisco, CA 94107  
+
+**Attn:** Development Team  
+
+---
+
+| Description | Quantity | Unit Price | Amount |
+|-------------|----------|------------|--------|
+| Frontend Development (React + Styled Components) | 1 | $8,500.00 | $8,500.00 |
+| Backend API Implementation (Node.js + MongoDB) | 1 | $6,200.00 | $6,200.00 |
+| Database Schema Design & Migration | 1 | $1,800.00 | $1,800.00 |
+| Testing & Quality Assurance | 1 | $1,200.00 | $1,200.00 |
+| Project Management & Deployment | 1 | $1,300.00 | $1,300.00 |
+| **Subtotal** | | | **$18,600.00** |
+| Tax (8%) | | | $1,488.00 |
+| **Total Due** | | | **$20,088.00** |
+
+---
+
+### Payment Information
+
+**Payment Terms:** Net 30 days
+
+**Payment Method:** Bank Transfer / PayPal
+
+**Balance Due:** $20,088.00
+
+---
+
+*Thank you for your business!*
+*Found.com Technologies Inc.*
+*Contact: billing@found.com*

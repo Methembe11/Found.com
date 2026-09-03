@@ -7,7 +7,7 @@ const API_ORIGIN = API.replace(/\/api\/?$/, '');
 export const resolveImageUrl = (url) => {
   if (!url) return url;
   if (url.startsWith('/uploads/')) {
-    return `${API_ORIGIN}${url}`;
+    return `${API_ORIGIN}${url}?v=1`;
   }
   return url;
 };

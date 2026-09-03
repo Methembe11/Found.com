@@ -1,4 +1,4 @@
-const API = process.env.REACT_APP_API_URL || '/api';
+const API = process.env.REACT_APP_API_URL || 'https://found-com-2.onrender.com/api';
 const API_ORIGIN = API.replace(/\/api\/?$/, '');
 
 export const resolveImageUrl = (url) => {

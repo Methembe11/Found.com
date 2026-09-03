@@ -33,7 +33,9 @@ const upload = multer({
   }
 })
 
-app.use(helmet())
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
+}))
 const allowedOrigins = [
   'http://localhost:3000',
   process.env.FRONTEND_URL

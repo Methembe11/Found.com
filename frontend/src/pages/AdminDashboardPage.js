@@ -487,7 +487,7 @@ const AdminDashboardPage = () => {
                   <Label>Product image</Label>
                   {imagePreview && (
                     <ImagePreview>
-                      <img src={imagePreview} alt="Preview" onError={(e) => { e.target.style.display = 'none'; }} />
+                      <img src={resolveImageUrl(imagePreview)} alt="Preview" onError={(e) => { e.target.style.display = 'none'; }} />
                     </ImagePreview>
                   )}
                   <FileInput

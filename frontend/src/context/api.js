@@ -1,10 +1,10 @@
 const API = process.env.REACT_APP_API_URL || '/api';
+const API_ORIGIN = API.replace(/\/api\/?$/, '');
 
 export const resolveImageUrl = (url) => {
   if (!url) return url;
   if (url.startsWith('/uploads/')) {
-    const base = process.env.REACT_APP_API_URL || '';
-    return `${base}${url}`;
+    return `${API_ORIGIN}${url}`;
   }
   return url;
 };
